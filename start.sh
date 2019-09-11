@@ -1,18 +1,17 @@
 #!/bin/bash
 
-APP=laravel
+APP=php-fpm
 
 echo Uploading Application container
 docker-compose up -d
 
 echo Copying the configuration example file
-cp .env.example app-login/.env
-
-echo Create project
-docker exec -it $APP-app composer create-project --prefer-dist laravel/laravel app-login
+cp htdocs/.env.example htdocs/.env
+cp htdocs/api.dev/.env.example htdocs/api.dev/.env
 
 echo Install dependencies
 docker exec -it $APP-app composer install
+docker exec -it $APP-app --bash exec "cd /var/www/html/api.dev && composer install"
 #echo Update dependencies
 #docker exec -it $APP-app composer update
 
