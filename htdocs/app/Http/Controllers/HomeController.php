@@ -1,5 +1,12 @@
 <?php
 
+namespace App\Http\Controllers;
+use View;
+use Illuminate\Support\Facades\Validator as Validator;
+use Illuminate\Support\Facades\Input as Input;
+use Illuminate\Support\Facades\Redirect;
+use App\Providers\SigWSService;
+
 class HomeController extends BaseController
 {
 
@@ -31,8 +38,8 @@ class HomeController extends BaseController
     {
         // validate the info, create rules for the inputs
         $rules = array(
-            'login' => 'required|login', // make sure the login is an actual login
-            'senha' => 'required|alphaNum|min:3' // senha can only be alphanumeric and has to be greater than 3 characters
+            'login' => 'required', // make sure the login is an actual login
+            'senha' => 'required' // required|alphaNum|min:3 senha can only be alphanumeric and has to be greater than 3 characters
         );
 
         // run the validation rules on the inputs from the form
@@ -51,10 +58,13 @@ class HomeController extends BaseController
                 'senha' => Input::get('senha')
             );
 
+
             $loginSigWS = SigWSService::login($userdata);
 
             // attempt to do the login
             if (!empty($loginSigWS)) {
+
+                var_dump(var_export($loginSigWS,true));
 
                 // validation successful!
                 // redirect them to the secure section or whatever

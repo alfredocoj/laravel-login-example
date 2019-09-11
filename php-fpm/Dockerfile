@@ -35,7 +35,7 @@ RUN if [ ${INSTALL_GD} = true ]; then \
 #####################################
 # compression:
 #####################################
-
+RUN apt update --fix-missing
 ARG INSTALL_COMPRESSION=false
 RUN if [ ${INSTALL_COMPRESSION} = true ]; then \
     # Install zip, bz2 and requirements
