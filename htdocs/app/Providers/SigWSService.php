@@ -1,6 +1,8 @@
 <?php
 namespace App\Providers;
 
+use GuzzleHttp;
+
 class SigWSService
 {
     protected static $urlBase = "http://www.sigws.uema.br/wservice";
@@ -11,18 +13,19 @@ class SigWSService
     public static function login($userData)
     {
         $login = $userData["login"];
+        //$login = md5($userData["login"]);
         $senha = $userData["senha"];
         $urlLogin = SigWSService::$urlBase . '/login?login=' . $login . '&senha=' . $senha;
+        //$urlLogin = SigWSService::$urlBase . '/login?login=' . $login;
 
-        $guzzleClient = new GuzzleHttp\Client(['base_uri' => $urlLogin, [
-            'headers' => ['appName' => SigWSService::$appName, 'appToken' => SigWSService::$appToken, 'Content-Type' => 'application/json'],
-            'decode_content' => false
-        ]]);
+        $guzzleClient = new GuzzleHttp\Client();
 
-        $client = json_api()->client($guzzleClient);
-
-        $response = $client->request('GET');
-        var_dump($response);
+        $request = $guzzleClient->get($urlLogin, [
+            'headers' => ['appName' => SigWSService::$appName, 'appToken' => SigWSService::$appToken, 'Content-Type' => 'application/json']
+        ]);
+        $response = json_decode($request->getBody());
+        //var_dump(var_export($response,true));
+        dd($response);
         return $response;
     }
 }
